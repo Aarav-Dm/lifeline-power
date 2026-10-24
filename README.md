@@ -4,7 +4,7 @@ A Massachusetts care coordinator types a town, sees that town's electric utility
 
 **Track:** Healthcare & Biotech.
 
-**Live URL:** `https://<owner>.github.io/<repo>/` (placeholder until the first GitHub Pages deploy).
+**Live URL:** https://aarav-dm.github.io/lifeline-power/
 
 ## Demo video
 

@@ -10,7 +10,7 @@ We primarily used **`kiro-cli` 2.34.0** in headless CLI mode (`kiro-cli chat --v
 
 - **Kiro CLI:** Our primary execution engine. It enabled scriptable terminal automation, prompt logging in `research/spec-agent-prompts/`, and execution of the Spec agent and sub-agents.
 - **Kiro Crew Profile:** Parallel sub-agents (3 in MVP, 4 in Tier 1) ran using the `kirocrew-worker` agent profile installed by Kiro Crew (which configures the worker prompt and Crew MCP tools) against shared types in `src/types.ts`. However, Kiro Crew's platform (gateway, web dashboard, cron) was not used.
-- **Kiro IDE:** Used during the 6:23 PM ACP session to implement QA bug fixes.
+- **Kiro IDE:** One bug-fix session at 6:23 PM ran through Kiro's ACP interface (logged as an IDE/ACP session, Default agent). The IDE's Correctness panel was not used.
 - **What was NOT used:** **Kiro Web** was not used.
 
 ---
