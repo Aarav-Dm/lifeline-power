@@ -9,7 +9,7 @@ This write-up documents how Kiro was used to build LifeLine Power for the Hackac
 We primarily used **`kiro-cli` 2.34.0** in headless CLI mode (`kiro-cli chat --v3 --mode spec --no-interactive --trust-all-tools --trust-workspace "<prompt>"`), resuming sessions (`--resume`) across revision gates.
 
 - **Kiro CLI:** Our primary execution engine. It enabled scriptable terminal automation, prompt logging in `research/spec-agent-prompts/`, and execution of the Spec agent and sub-agents.
-- **Kiro Crew Profile:** Parallel sub-agents (3 in MVP, 4 in Tier 1) ran using the `kirocrew-worker` agent profile installed by Kiro Crew (which configures the "Kiro Crew Worker" prompt and loads Crew worker MCP tools). We used this Crew-installed profile to build the data layer, records, and UI in parallel against shared types in `src/types.ts`. However, Kiro Crew's full platform (gateway, web dashboard, and cron orchestrator) was not used.
+- **Kiro Crew Profile:** Parallel sub-agents (3 in MVP, 4 in Tier 1) ran using the `kirocrew-worker` agent profile installed by Kiro Crew (which configures the worker prompt and Crew MCP tools) against shared types in `src/types.ts`. However, Kiro Crew's platform (gateway, web dashboard, cron) was not used.
 - **Kiro IDE:** Used during the 6:23 PM ACP session to implement QA bug fixes.
 - **What was NOT used:** **Kiro Web** was not used.
 
@@ -20,19 +20,19 @@ We primarily used **`kiro-cli` 2.34.0** in headless CLI mode (`kiro-cli chat --v
 We structured our specification under `/.kiro/specs/lifeline/` across three gated phases:
 1. **Requirements (`requirements.md`):** Formal EARS acceptance criteria across 14 requirements.
 2. **Design (`design.md`):** Architectural state machine, file layout, and 22 Correctness properties ($P_1$–$P_{22}$).
-3. **Tasks (`tasks.md`):** Backlog (Tasks 0–19) isolating the MVP (Tasks 0–7) from Tier 1 (Tasks 8–14a) and Tier 2.
+3. **Tasks (`tasks.md`):** Backlog (Tasks 0–19) isolating MVP (Tasks 0–7) from Tier 1 (Tasks 8–14a) and Tier 2.
 
 **What the Spec Agent Caught During Drafting:**
-- *Requirements phase (4:22 PM):* Checked the MassGIS dataset while drafting, corrected our hand draft of 8 dual-served Eversource/National Grid towns, and flagged conflicting columns in Westfield.
-- *Design phase (4:27 PM):* Discovered the latest Essex County FEMA disaster row was declaration 3599 (not 4736) and mapped data files to `public/data/` instead of `data/`.
+- *Requirements phase (4:22 PM):* Checked MassGIS data, corrected our hand draft of 8 dual-served Eversource/National Grid towns, and flagged conflicting columns in Westfield.
+- *Design phase (4:27 PM):* Discovered latest Essex County FEMA disaster was declaration 3599 (not 4736) and mapped data files to `public/data/` instead of `data/`.
 - *Tasks phase (4:29 PM):* Structured discrete tasks with property links and removed an unrealistic early-deploy task before coding started.
 
 **Plan Agent & Bugfix Specs:**
-- At 6:14 PM, the built-in **Kiro Plan agent** (`kiro-cli chat --agent kiro_planner`) audited the stretch backlog against project bans, successfully cutting unsafe items (untranscribed paper boxes per Ban 12, calendar `.ics` exports per Bans 3/10/12/14).
-- Three targeted bugfix specs (`lifeline-ui-bugs/`, `lifeline-qa-bugs/`, `lifeline-step-order/`) added 13+ regression tests. Note: these ran under Kiro's **Default agent**; the standalone Bug Fix agent is not claimed.
+- At 6:14 PM, the built-in **Kiro Plan agent** (`kiro-cli chat --agent kiro_planner`) audited the stretch backlog against project bans, cutting unsafe items (untranscribed paper boxes per Ban 12, calendar `.ics` exports per Bans 3/10/12/14).
+- Three targeted bugfix specs (`lifeline-ui-bugs/`, `lifeline-qa-bugs/`, `lifeline-step-order/`) added 13+ regression tests. These ran under Kiro's **Default agent**; the standalone Bug Fix agent is not claimed.
 
 **How SDD Compares to Vibe Coding:**
-In healthcare utility routing, "vibe coding" with an unconstrained LLM fails dangerously: it hallucinates policies, blends Eversource's Westwood address with National Grid's outage program, invents non-existent 12-month shutoff protections from Unitil checkboxes, and promises continuous power. SDD established rigid behavioral invariants, clear data boundaries, and non-negotiable refusals before generating code.
+In healthcare utility routing, "vibe coding" with unconstrained LLMs fails dangerously: hallucinating policies, blending Eversource's Westwood address with National Grid's outage program, inventing 12-month shutoff protections from Unitil checkboxes, and promising continuous power. SDD established rigid behavioral invariants, clear data boundaries, and non-negotiable refusals before generating code.
 
 ---
 
@@ -51,7 +51,7 @@ We maintained five global steering documents in `/.kiro/steering/` (`product.md`
 **Strategy That Made the Biggest Difference:**
 Treating `bans.md` (15 refusal rules) as non-negotiable architectural constraints. The Spec agent and sub-agents deterministically respected negative constraints: dropping generic "not a guarantee of power" disclaimers (Ban 15), refusing to infer household languages from demographic rates (Ban 9), isolating Wellesley's calendar-year expiry to Wellesley (Ban 4), and refusing to invent forms for unverified municipal utilities like Holyoke (Ban 8).
 
-At 6:09 PM, we validated a custom read-only audit agent (`.kiro/agents/bans-check.json` via `kiro-cli agent validate`), which read `src/rules/programs.ts` and confirmed zero ban violations.
+At 6:09 PM, a custom read-only audit agent (`.kiro/agents/bans-check.json` via `kiro-cli agent validate`) inspected `src/rules/programs.ts` and confirmed zero ban violations.
 
 ---
 
@@ -68,13 +68,13 @@ We utilized two distinct MCP servers:
 We implemented property-based tests using `fast-check` tied to spec properties ($P_1$–$P_{22}$), validating hundreds of randomized inputs across 210 passing tests:
 
 **The $P_1$ Planted-Bug Mutation Test:**
-At 5:16 PM, we performed a mutation test by altering the reducer to preserve prior form answers when changing towns. Vitest immediately caught the bug, failing Property $P_1$ (`Town change clears answers`) with the minimal counterexample:
+At 5:16 PM, we ran a mutation test altering the reducer to preserve form answers when changing towns. Vitest immediately failed Property $P_1$ (`Town change clears answers`) with the minimal counterexample:
 - Counterexample: `ABINGTON → HALIFAX` (and `Fitchburg → Leominster`).
-The property test proved that old form data leaked across company boundaries. Reverting the mutation restored all tests to green.
+The property test proved old form data leaked across company boundaries. Reverting the mutation restored all tests to green.
 
 **Other Issues Caught by PBT:**
 - **$P_{16}$ Performance Timeout (5:56 PM):** $P_{16}$ timed out at 5.0s because EJ stats re-scanned 2,604 block groups across 351 towns on every render. Caching per kit reduced execution from 15.9s to 1.0s.
-- **Task 9 Scope Conflict (5:51 PM):** Adding a second Unitil record broke older unit tests that hardcoded a single Unitil record. Spec properties $P_7, P_8, P_{13}, P_{21}$ forced the rule to generalize to "all Unitil records," preserving system correctness.
+- **Task 9 Scope Conflict (5:51 PM):** Adding a second Unitil record broke older unit tests hardcoded to a single Unitil record. Spec properties $P_7, P_8, P_{13}, P_{21}$ forced the rule to generalize to "all Unitil records," preserving system correctness.
 
 ---
 
