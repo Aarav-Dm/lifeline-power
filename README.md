@@ -23,7 +23,7 @@ pnpm build
 
 ## Data sources
 
-The app reads the local copies under `public/data/`. It does not fetch these URLs at runtime. Licences are the ones recorded in `research/lifeline-sources.md` when each page was opened.
+The app reads the local copies under `public/data/`. It does not fetch these URLs at runtime. Each source, its link and the date it was opened are listed on the app's Sources page.
 
 | Data | Local copy | Source | Licence |
 |---|---|---|---|
@@ -36,13 +36,13 @@ The app reads the local copies under `public/data/`. It does not fetch these URL
 | Unitil life-support page and PDF | program record | [Life support customers](https://unitil.com/outages-emergencies/life-support-customers), [MALFORM-MA.pdf](https://unitil.com/sites/default/files/2021-08/MALFORM-MA.pdf) | Unitil public page and PDF |
 | Shutoff rule | shown beside the Unitil card | [220 CMR 25.03](https://www.law.cornell.edu/regulations/massachusetts/220-CMR-25-03), [M.G.L. c.164 §124A](https://malegislature.gov/Laws/GeneralLaws/PartI/TitleXXII/Chapter164/Section124a) | Legal public domain |
 
-HHS emPOWER (45,895 MA Medicare beneficiaries with electricity-dependent equipment) is a pitch-only source in `research/lifeline-sources.md`, not loaded by the app.
+HHS emPOWER (45,895 MA Medicare beneficiaries with electricity-dependent equipment) is shown only on the About page with its source link; it is not part of the program logic.
 
-Other opened forms (Eversource, Wellesley, National Grid medical and paper notice) are listed with their URLs in `research/lifeline-sources.md`. Open-source libraries come from `pnpm-lock.yaml` and stay under each package's own licence.
+Other opened forms (Eversource, Wellesley, National Grid medical and paper notice) are listed with their URLs on the app's Sources page. Open-source libraries come from `pnpm-lock.yaml` and stay under each package's own licence.
 
 ## Kiro
 
-Specs, steering, hooks, and skills are in `.kiro/`. The write-up log is [`docs/kiro-notes.md`](docs/kiro-notes.md). Claim only what that log records.
+Specs, steering, hooks, agents, MCP settings and skills are in `.kiro/`.
 
 ## Local kit MCP
 

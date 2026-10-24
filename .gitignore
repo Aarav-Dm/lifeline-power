@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# internal working docs (kept local, not part of the submission)
+docs/
+research/
