@@ -5,9 +5,10 @@ import "./index.css"
 import App from "./App.tsx"
 import { ThemeProvider } from "@/components/theme-provider.tsx"
 
+// Light first (DESIGN-BRIEF v2); dark mode via the top-bar toggle. Print CSS forces black on white.
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ThemeProvider>
+    <ThemeProvider defaultTheme="light">
       <App />
     </ThemeProvider>
   </StrictMode>

@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "lifeline-kits": {
+      "command": "node",
+      "args": ["mcp/server.mjs"],
+      "disabled": false,
+      "autoApprove": ["town_company", "ej_mean", "program_sources"]
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "bans-check",
+  "description": "Read-only check of one file or diff against bans.md and judging.md. Reports violations. Does not edit.",
+  "tools": [
+    "read",
+    "@lifeline-kits/town_company",
+    "@lifeline-kits/ej_mean",
+    "@lifeline-kits/program_sources"
+  ],
+  "excludedTools": ["write", "shell", "web"],
+  "includeMcpJson": true,
+  "includePowers": false,
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read", "effect": "allow" },
+      { "capability": "fs_write", "effect": "deny" },
+      { "capability": "shell", "effect": "deny" },
+      { "capability": "web_fetch", "effect": "deny" },
+      { "capability": "web_search", "effect": "deny" },
+      {
+        "capability": "mcp",
+        "match": [
+          "lifeline-kits/town_company",
+          "lifeline-kits/ej_mean",
+          "lifeline-kits/program_sources"
+        ],
+        "effect": "allow"
+      }
+    ]
+  },
+  "resources": [
+    "file://.kiro/steering/bans.md",
+    "file://.kiro/steering/judging.md",
+    "file://.kiro/steering/programs.md"
+  ],
+  "prompt": "You check one file or one diff. You do not edit anything.\n\nRead .kiro/steering/bans.md and .kiro/steering/judging.md (they are already in your resources). Read the file or diff the user names. Compare the text to those two files.\n\nReport only violations. For each one, name the ban number or the judging rule, quote the offending line, and say why it breaks that rule. If there is no violation, say \"No violation.\"\n\nDo not invent a number, date, URL, quote, or eligibility rule. Do not decide eligibility. Do not give medical advice. Do not write \"33%\". Do not claim Kiro Web or Crew.\n\nYou may call town_company, ej_mean, or program_sources only to check a town or company code that the file already names. Those tools are read-only. Do not treat their output as a new rule."
+}

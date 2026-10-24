@@ -1,0 +1,18 @@
+{
+  "name": "builder-worker",
+  "description": "LifeLine Power builder: implements one tasks.md item on the files it is told it owns, runs pnpm test, and reports files changed and results. Never edits public/data/ or src/types.ts.",
+  "tools": ["read", "write", "shell"],
+  "excludedTools": ["web"],
+  "includeMcpJson": false,
+  "includePowers": false,
+  "resources": ["file://.kiro/steering/**/*.md", "file://.kiro/specs/lifeline/design.md"],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read", "effect": "allow" },
+      { "capability": "fs_write", "match": ["src/**", "tests/**", "docs/**"], "effect": "allow" },
+      { "capability": "fs_write", "match": ["public/data/**", "src/types.ts", ".kiro/steering/**"], "effect": "deny" },
+      { "capability": "shell", "match": ["pnpm test*", "pnpm build*", "pnpm exec tsc*"], "effect": "allow" }
+    ]
+  },
+  "prompt": "You are builder-worker for LifeLine Power (repo root = cwd). Do exactly one tasks.md item from .kiro/specs/lifeline/. Edit only the files the request says you own. Steering bans.md is binding: never invent a rule, number, URL or quote; mark gaps UNVERIFIED. Use shadcn components for any control. When done, run pnpm test and pnpm exec tsc -b, then report: files changed, test count, anything not done."
+}

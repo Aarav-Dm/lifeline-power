@@ -1,0 +1,28 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "guard-kit-data",
+      "description": "Block agent writes under public/data/ (the five kits are read-only evidence).",
+      "trigger": "PreToolUse",
+      "matcher": ".*",
+      "action": { "type": "command", "command": "node scripts/guard-raw-data.mjs" },
+      "timeout": 10
+    },
+    {
+      "name": "tests-on-save",
+      "description": "Rerun the property tests after the agent saves source or tests.",
+      "trigger": "PostFileSave",
+      "matcher": "(src|tests)[\\\\/].*\\.(ts|tsx)$",
+      "action": { "type": "command", "command": "pnpm test" },
+      "timeout": 120
+    },
+    {
+      "name": "tests-on-stop",
+      "description": "Run the full suite when the agent finishes a turn; failures go back to the agent.",
+      "trigger": "Stop",
+      "action": { "type": "command", "command": "pnpm test" },
+      "timeout": 120
+    }
+  ]
+}
